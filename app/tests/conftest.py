@@ -17,8 +17,7 @@ if not os.environ.get("VAULT_PATH"):
 
 from fastapi.testclient import TestClient  # noqa: E402
 
-from app.chat.agent import ChatDependencies  # noqa: E402
-from app.dependencies import VaultClient  # noqa: E402
+from app.dependencies import ChatDependencies, VaultClient  # noqa: E402
 from app.main import app  # noqa: E402
 
 

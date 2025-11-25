@@ -1,6 +1,6 @@
 """OpenAI-compatible Pydantic models."""
 
-from typing import Literal, Union
+from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -19,11 +19,11 @@ class ChatMessage(BaseModel):
     """
 
     role: Literal["system", "user", "assistant"]
-    content: Union[str, list[ContentPart]]
+    content: str | list[ContentPart]
 
     @field_validator("content", mode="before")
     @classmethod
-    def normalize_content(cls, v: Union[str, list]) -> Union[str, list[ContentPart]]:
+    def normalize_content(cls, v: str | list) -> str | list[ContentPart]:
         """Normalize content to handle both string and array formats."""
         if isinstance(v, str):
             return v

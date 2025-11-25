@@ -8,14 +8,14 @@ from collections.abc import AsyncGenerator
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import StreamingResponse
 
-from app.chat.agent import ChatDependencies, chat_agent
+from app.chat.agent import chat_agent
 from app.chat.models import (
     ChatCompletionRequest,
     ChatCompletionResponse,
     ChatMessage,
     Choice,
 )
-from app.dependencies import VaultClient, get_vault_client, logger
+from app.dependencies import ChatDependencies, VaultClient, get_vault_client, logger
 
 router = APIRouter(prefix="/v1", tags=["chat"])
 

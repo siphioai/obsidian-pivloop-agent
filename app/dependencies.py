@@ -110,6 +110,36 @@ class VaultClient:
         full_path.parent.mkdir(parents=True, exist_ok=True)
         full_path.write_text(content, encoding="utf-8")
 
+    async def delete_file(self, path: str) -> None:
+        """Delete a file from the vault.
+
+        Args:
+            path: Relative path to file
+
+        Raises:
+            VaultNotFoundError: If file does not exist
+            VaultSecurityError: If path traversal detected
+        """
+        full_path = self._validate_path(path)
+        if not full_path.exists():
+            raise VaultNotFoundError(f"File not found: {path}")
+        full_path.unlink()
+
+    async def file_exists(self, path: str) -> bool:
+        """Check if a file exists in the vault.
+
+        Args:
+            path: Relative path to file
+
+        Returns:
+            True if file exists, False otherwise
+        """
+        try:
+            full_path = self._validate_path(path)
+            return full_path.exists()
+        except VaultSecurityError:
+            return False
+
     async def list_files(self, folder: str = "", pattern: str = "*.md") -> list[str]:
         """List files in the vault matching a pattern.
 
@@ -137,3 +167,15 @@ class VaultClient:
 async def get_vault_client() -> AsyncIterator[VaultClient]:
     """FastAPI dependency provider for VaultClient."""
     yield VaultClient(vault_path=get_settings().vault_path)
+
+
+@dataclass
+class ChatDependencies:
+    """Dependencies injected into agent tools via RunContext.
+
+    This is defined here to avoid circular imports between chat.agent
+    and notes.tools modules.
+    """
+
+    vault: VaultClient
+    trace_id: str
