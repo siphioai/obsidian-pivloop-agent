@@ -417,6 +417,29 @@ npm run format:check
 
 **Directory**: Create `.agents/plans/` if it doesn't exist
 
+### Plan Length Guidelines
+
+**Target Length**: 500-700 lines
+
+The plan must balance comprehensiveness with conciseness. A well-structured plan within this range demonstrates:
+
+- **Focused Context**: Include only information directly relevant to implementation—no filler or redundant explanations
+- **Dense Information**: Every line should add value; prefer bullet points and code snippets over prose
+- **Clear Structure**: Use consistent formatting and headers so the execution agent can navigate quickly
+- **Actionable Tasks**: Tasks should be specific enough to execute but not over-documented with obvious details
+
+**If your plan exceeds 700 lines:**
+- Consolidate similar tasks into grouped sections
+- Remove generic guidance that repeats project-wide conventions
+- Replace lengthy explanations with pattern references (`MIRROR: path/to/file.py:15-30`)
+- Trim validation commands to essential checks only
+
+**If your plan is under 500 lines:**
+- Ensure all context references are included with specific line numbers
+- Verify edge cases and error handling are documented
+- Add testing strategy details specific to the feature
+- Include integration points that might be overlooked
+
 ## Quality Criteria
 
 ### Context Completeness ✓
