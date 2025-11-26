@@ -5,6 +5,7 @@ from pydantic_ai import Agent
 from app.dependencies import ChatDependencies
 from app.notes.tools import note_operations
 from app.search import vault_search
+from app.tags import tag_management
 
 SYSTEM_PROMPT = """You are a helpful AI assistant integrated with Obsidian.
 You help users manage their knowledge base through natural conversation.
@@ -40,12 +41,27 @@ Example interactions:
 - "Show me all project notes" → use vault_search by_tag with tags=["project"]
 - "What links to my API design doc?" → use vault_search by_link with direction="backlinks"
 - "Notes from last week" → use vault_search by_date with appropriate dates
-- "Project notes about meetings" → use vault_search combined"""
+- "Project notes about meetings" → use vault_search combined
+
+You have access to the tag_management tool which allows you to:
+- add: Add tags to note frontmatter
+- remove: Remove tags from frontmatter
+- rename: Rename a tag vault-wide
+- list: List all tags with usage counts
+- suggest: Get AI-suggested tags based on note content
+- auto_tag: Apply suggested tags (requires confirm=True)
+- connect: Create [[wikilinks]] to related notes based on shared tags
+
+Tag guidelines:
+- Tags are specified without # prefix (e.g., "project" not "#project")
+- Use suggest before auto_tag to preview suggestions
+- auto_tag requires confirm=True to actually apply changes
+- connect finds notes sharing 2+ tags and adds them to a "Related Notes" section"""
 
 chat_agent = Agent(
     "anthropic:claude-haiku-4-5",
     deps_type=ChatDependencies,
-    tools=[note_operations, vault_search],
+    tools=[note_operations, vault_search, tag_management],
     retries=2,
     system_prompt=SYSTEM_PROMPT,
 )

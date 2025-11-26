@@ -405,9 +405,7 @@ Discussion about the API project.
     @pytest.mark.asyncio
     async def test_fulltext_folder_filter(self, mock_ctx: Mock) -> None:
         """Test fulltext search limited to folder."""
-        result = await vault_search(
-            mock_ctx, operation="fulltext", query="API", folder="Projects"
-        )
+        result = await vault_search(mock_ctx, operation="fulltext", query="API", folder="Projects")
 
         assert "API Design" in result
         # Meeting note is in Work folder, should not appear
@@ -416,9 +414,7 @@ Discussion about the API project.
     @pytest.mark.asyncio
     async def test_fulltext_no_matches(self, mock_ctx: Mock) -> None:
         """Test fulltext search with no matches."""
-        result = await vault_search(
-            mock_ctx, operation="fulltext", query="NONEXISTENT_TERM"
-        )
+        result = await vault_search(mock_ctx, operation="fulltext", query="NONEXISTENT_TERM")
 
         assert "No results found" in result
 
@@ -528,9 +524,7 @@ Discussion about the API project.
     @pytest.mark.asyncio
     async def test_date_search_start_only(self, mock_ctx: Mock) -> None:
         """Test date search with only start date."""
-        result = await vault_search(
-            mock_ctx, operation="by_date", start_date="2025-01-18"
-        )
+        result = await vault_search(mock_ctx, operation="by_date", start_date="2025-01-18")
 
         # Meeting (Jan 18) and Database (Jan 20) from start
         assert "Meeting" in result

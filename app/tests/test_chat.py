@@ -1,6 +1,5 @@
 """Tests for chat feature."""
 
-import pytest
 from fastapi.testclient import TestClient
 
 from app.chat.models import ChatCompletionRequest, ChatMessage
@@ -15,10 +14,11 @@ class TestModels:
         assert msg.role == "user"
         assert msg.content == "Hello"
 
-    def test_empty_content_fails(self) -> None:
-        """Test that empty content raises validation error."""
-        with pytest.raises(ValueError):
-            ChatMessage(role="user", content="")
+    def test_empty_content_allowed(self) -> None:
+        """Test that empty content is allowed (OpenAI allows it)."""
+        # OpenAI API allows empty content strings
+        msg = ChatMessage(role="user", content="")
+        assert msg.content == ""
 
     def test_chat_completion_request(self) -> None:
         """Test creating a valid chat completion request."""
