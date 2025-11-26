@@ -81,3 +81,42 @@ class ChatCompletionResponse(BaseModel):
     model: str
     choices: list[Choice]
     usage: UsageInfo = Field(default_factory=UsageInfo)
+
+
+class DeltaContent(BaseModel):
+    """Delta content in a streaming chunk."""
+
+    role: str | None = None
+    content: str | None = None
+
+
+class StreamChoice(BaseModel):
+    """A streaming chunk choice."""
+
+    index: int = 0
+    delta: DeltaContent
+    finish_reason: str | None = None
+
+
+class ChatCompletionChunk(BaseModel):
+    """OpenAI-compatible streaming chunk response."""
+
+    id: str
+    object: Literal["chat.completion.chunk"] = "chat.completion.chunk"
+    created: int
+    model: str
+    choices: list[StreamChoice]
+
+
+class ErrorDetail(BaseModel):
+    """Structured error detail."""
+
+    message: str = Field(..., description="Human-readable error message")
+    type: Literal["invalid_request_error", "server_error", "authentication_error"] = "server_error"
+    code: str | None = None
+
+
+class ErrorResponse(BaseModel):
+    """OpenAI-compatible error response wrapper."""
+
+    error: ErrorDetail

@@ -46,3 +46,34 @@ def chat_deps(mock_vault_client: VaultClient) -> ChatDependencies:
 def client() -> TestClient:
     """Create a FastAPI test client."""
     return TestClient(app)
+
+
+@pytest.fixture
+def mock_stream_events():
+    """Create mock async generator for streaming events.
+
+    Returns a factory function that creates mock streaming events.
+    Usage:
+        async for event in mock_stream_events("Hello world"):
+            # Process PartDeltaEvent and AgentRunResultEvent
+    """
+    from unittest.mock import Mock
+
+    async def _mock_stream(content: str = "Test response"):
+        from pydantic_ai import AgentRunResultEvent, PartDeltaEvent
+
+        # Yield content word by word as PartDeltaEvent
+        for word in content.split():
+            delta = Mock()
+            delta.content_delta = word + " "
+            event = Mock(spec=PartDeltaEvent)
+            event.delta = delta
+            yield event
+
+        # Yield final result event
+        result_event = Mock(spec=AgentRunResultEvent)
+        result_event.result = Mock()
+        result_event.result.output = content
+        yield result_event
+
+    return _mock_stream
