@@ -2,6 +2,7 @@
 
 from pydantic_ai import Agent
 
+from app.analytics import vault_analytics
 from app.dependencies import ChatDependencies
 from app.notes.tools import note_operations
 from app.search import vault_search
@@ -56,12 +57,26 @@ Tag guidelines:
 - Tags are specified without # prefix (e.g., "project" not "#project")
 - Use suggest before auto_tag to preview suggestions
 - auto_tag requires confirm=True to actually apply changes
-- connect finds notes sharing 2+ tags and adds them to a "Related Notes" section"""
+- connect finds notes sharing 2+ tags and adds them to a "Related Notes" section
+
+You have access to the vault_analytics tool which allows you to:
+- overview: Get comprehensive vault statistics (notes, folders, tags, links)
+- trends: Analyze activity over time (day/week/month/year periods)
+- tag_distribution: See tag usage patterns and orphan notes
+- activity: View recent vault activity (created/modified notes)
+- insights: Get AI-generated analysis with suggestions
+
+Analytics guidelines:
+- For "how many notes" or "vault stats" → use overview operation
+- For "trends" or "activity over time" → use trends with appropriate period
+- For "tag usage" or "most used tags" → use tag_distribution
+- For "recent changes" or "what did I create" → use activity with days parameter
+- For general vault health → use insights operation"""
 
 chat_agent = Agent(
     "anthropic:claude-haiku-4-5",
     deps_type=ChatDependencies,
-    tools=[note_operations, vault_search, tag_management],
+    tools=[note_operations, vault_search, tag_management, vault_analytics],
     retries=2,
     system_prompt=SYSTEM_PROMPT,
 )
